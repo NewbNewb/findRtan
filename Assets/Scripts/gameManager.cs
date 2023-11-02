@@ -16,6 +16,8 @@ public class gameManager : MonoBehaviour
     public GameObject secondCard;
     public AudioClip match;
     public AudioSource audioSource;
+    public GameObject nameTxt;
+    public GameObject faildTxt;
 
 
     void Awake()
@@ -28,20 +30,20 @@ public class gameManager : MonoBehaviour
         Application.targetFrameRate = 60;
         Time.timeScale = 1f;
 
-        int[] rtans = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7 };
-        rtans = rtans.OrderBy(item => Random.Range(-1f, 1f)).ToArray();
+        int[] imeges = { 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9 };
+        imeges = imeges.OrderBy(item => Random.Range(-1f, 1f)).ToArray();
 
-        for (int i = 0; i < 16; i++)
+        for (int i = 0; i < 20; i++)
         {
             GameObject newCard = Instantiate(card);
             newCard.transform.parent = GameObject.Find("cards").transform;
 
-            float x = (i / 4) * 1.4f - 2.1f;
-            float y = (i % 4) * 1.4f - 3.0f;
+            float x = (i / 5) * 1.4f - 2.1f;
+            float y = (i % 5) * 1.4f - 3.7f;
             newCard.transform.position = new Vector3(x, y, 0);
 
-            string rtanName = "rtan" + rtans[i].ToString();
-            newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(rtanName);
+            string imegesName = "m" + imeges[i].ToString();
+            newCard.transform.Find("front").GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>(imegesName);
         }
     }
 
@@ -50,7 +52,7 @@ public class gameManager : MonoBehaviour
     {
         time += Time.deltaTime;
         timeTxt.text = time.ToString("N2");
-        if (time > 30.0f) //if (timeTxt.text == "30.00")
+        if (time > 60.0f)
         {
             Time.timeScale = 0f;
             endTxt.SetActive(true);
@@ -65,6 +67,9 @@ public class gameManager : MonoBehaviour
         if (firstCardImage == secondCardImge)
         {
             audioSource.PlayOneShot(match);
+            cardNemas();
+            nameTxt.SetActive(true);
+            Invoke("isMatchedname", 1f);
             firstCard.GetComponent<card>().destroyCard();
             secondCard.GetComponent<card>().destroyCard();
 
@@ -80,6 +85,8 @@ public class gameManager : MonoBehaviour
         {
             firstCard.GetComponent<card>().closeCard();
             secondCard.GetComponent<card>().closeCard();
+            faildTxt.SetActive(true);
+            Invoke("notMatchedname", 0.8f);
         }
         firstCard = null;
         secondCard = null;
@@ -88,6 +95,20 @@ public class gameManager : MonoBehaviour
     {
         SceneManager.LoadScene("MainScene");
     }
+    public void isMatchedname()
+    {
+        nameTxt.SetActive(false);
+    }
+    public void notMatchedname()
+    {
+        faildTxt.SetActive(false);
+    }
+    void cardNemas()
+    {
+        Debug.Log("¿Ã∏ß¿Ã ∂∏¥Ÿ!");
+    }
+
+
 
     /*void GameEnd()
     {
